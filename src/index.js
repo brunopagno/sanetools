@@ -11,7 +11,8 @@ const SERVER_PORT = process.env.SERVER_PORT || 3000;
 const app = express();
 
 app.get("/", (_req, res) => {
-  res.send("healthy");
+  res.setHeader("content-type", "application/json");
+  res.send(JSON.stringify({ status: "healthy" }));
 });
 
 app.listen(SERVER_PORT, console.log("Insanity is live"));
