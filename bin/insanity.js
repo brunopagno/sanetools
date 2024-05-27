@@ -3,12 +3,14 @@
 import fs from "fs";
 import path from "path";
 import url from "url";
+import { exec } from "child_process";
 
 const ignoreList = [
   ".git",
   ".github",
   "bin",
   "node_modules",
+  "package.json",
   "package-lock.json",
 ];
 
@@ -51,4 +53,20 @@ fs.mkdir(targetDir, (err) => {
       }
     });
   });
+
+  afterCopy();
 });
+
+function afterCopy() {
+  // cd into the target directory
+  process.chdir(targetDir);
+
+  // call npm init -y
+  exec("npm init -y", (err, stdout) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(stdout);
+  });
+}
