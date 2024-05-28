@@ -1,16 +1,15 @@
 #! /usr/bin/env node
+// @ts-check
 
 import fs from "fs";
 import path from "path";
 import url from "url";
-import { exec } from "child_process";
 
 const ignoreList = [
   ".git",
   ".github",
   "bin",
   "node_modules",
-  "package.json",
   "package-lock.json",
 ];
 
@@ -46,27 +45,38 @@ fs.mkdir(targetDir, (err) => {
           console.log(`${file} created at ${targetDir}`);
         });
       } else {
-        fs.copyFile(sourceFile, targetFile, (err) => {
-          if (err) throw err;
-          console.log(`${file} created at ${targetDir}`);
-        });
+        if (file === "package.json") {
+          copyPackageJson(sourceFile, targetFile);
+        } else {
+          copyFile(sourceFile, targetFile);
+        }
       }
     });
   });
-
-  afterCopy();
 });
 
-function afterCopy() {
-  // cd into the target directory
-  process.chdir(targetDir);
+/**
+ * @param {string} sourceFile
+ * @param {string} targetFile
+ */
+function copyPackageJson(sourceFile, targetFile) {
+  const fileContent = fs.readFileSync(sourceFile, "utf8");
+  const targetContent = fileContent.replace("insanity", targetDirName);
+  const targetJson = JSON.parse(targetContent);
 
-  // call npm init -y
-  exec("npm init -y", (err, stdout) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    console.log(stdout);
+  delete targetJson["bin"];
+  delete targetJson["author"];
+  delete targetJson["license"];
+
+  fs.writeFileSync(targetFile, JSON.stringify(targetJson, null, 2));
+}
+
+/**
+ * @param {string} sourceFile
+ * @param {string} targetFile
+ */
+function copyFile(sourceFile, targetFile) {
+  fs.copyFile(sourceFile, targetFile, (err) => {
+    if (err) throw err;
   });
 }
