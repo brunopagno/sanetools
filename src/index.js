@@ -15,4 +15,4 @@ app.get("/", (_req, res) => {
   res.send(JSON.stringify({ status: "healthy" }));
 });
 
-app.listen(SERVER_PORT, console.log(`Insanity is live at ${SERVER_PORT}`));
+app.listen(SERVER_PORT, console.log(`Server is live at ${SERVER_PORT}`));

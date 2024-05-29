@@ -61,7 +61,7 @@ fs.mkdir(targetDir, (err) => {
  */
 function copyPackageJson(sourceFile, targetFile) {
   const fileContent = fs.readFileSync(sourceFile, "utf8");
-  const targetContent = fileContent.replace("insanity", targetDirName);
+  const targetContent = fileContent.replace("sanetools", targetDirName);
   const targetJson = JSON.parse(targetContent);
 
   delete targetJson["bin"];
