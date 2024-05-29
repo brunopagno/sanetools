@@ -1,10 +1,10 @@
 {
-  "name": "insanity",
+  "name": "sanetools",
   "private": true,
   "type": "module",
   "version": "0.1.0",
   "bin": {
-    "insanity": "./bin/insanity.js"
+    "sanetools": "./bin/sanetools.js"
   },
   "scripts": {
     "dev": "nodemon src/index.js",

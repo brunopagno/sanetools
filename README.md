@@ -1,15 +1,28 @@
-# Insanity
+# Sane tools
 
-Another nodejs application.
-
-The goal of this repo is to function almost like a blueprint. Whenever I need to spin up a new nodejs server I shall just clone this thing and go from there.
+A collection of sane tools to make web applications.
 
 ### Usage
 
+To create a new project
+
 ```sh
-npx --package=https://github.com/brunopagno/insanity insanity <dirname>
+npx --package=https://github.com/brunopagno/sanetools sanetools <dirname>
 ```
 
-### Roadmap
+Then `cd` into the application directory and run `npm install`.
 
-Do not expect anything. Maybe more instructions and improvements come in the future.
+#### Commands
+
+```
+npm run dev
+npm run debug
+npm run test
+npm run test:watch
+```
+
+### This project uses
+
+- expressjs
+- no build step
+- node ECMAScript modules (`import` instead of `require`)
