@@ -8,11 +8,11 @@ if (process.env.NODE_ENV !== "production") {
 
 const SERVER_PORT = process.env.SERVER_PORT || 3000;
 
-const app = express();
+export const app = express();
 
 app.get("/", (_req, res) => {
   res.setHeader("content-type", "application/json");
   res.send(JSON.stringify({ status: "healthy" }));
 });
 
-app.listen(SERVER_PORT, console.log("Insanity is live"));
+app.listen(SERVER_PORT, console.log(`Insanity is live at ${SERVER_PORT}`));
