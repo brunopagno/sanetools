@@ -16,7 +16,6 @@ Then `cd` into the application directory and run `npm install`.
 
 ```
 npm run dev
-npm run debug
 npm run test
 npm run test:watch
 ```
@@ -24,5 +23,4 @@ npm run test:watch
 ### This project uses
 
 - expressjs
-- no build step
-- node ECMAScript modules (`import` instead of `require`)
+~- no build step~ people like typescript so much, there does not seem to be a way to avoid it
