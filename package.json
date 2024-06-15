@@ -10,8 +10,10 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "db:migrate": "prisma migrate dev --name",
+    "db:deploy": "npm run db:deploy:dev && npm run db:deploy:test",
+    "db:deploy:dev": "prisma migrate deploy",
+    "db:deploy:test": "dotenv -e .env.test prisma migrate deploy",
     "db:studio": "prisma studio",
-    "db:migrate:test": "dotenv -f .env.test -- prisma migrate deploy",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch"
