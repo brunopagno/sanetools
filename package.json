@@ -9,6 +9,9 @@
     "start": "NODE_ENV=production node dist/index.js",
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
+    "db:migrate": "prisma migrate dev --name",
+    "db:studio": "prisma studio",
+    "db:migrate:test": "dotenv -f .env.test -- prisma migrate deploy",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch"
@@ -22,9 +25,11 @@
     "@types/node": "^20.14.2",
     "@types/supertest": "^6.0.2",
     "dotenv": "^16.4.5",
+    "dotenv-cli": "^7.4.2",
     "eslint": "^8.57.0",
     "globals": "^15.4.0",
     "prettier": "^3.3.2",
+    "prisma": "^5.15.0",
     "supertest": "^7.0.0",
     "tsx": "^4.15.4",
     "typescript": "^5.4.5",
@@ -33,6 +38,7 @@
     "vitest": "^1.6.0"
   },
   "dependencies": {
+    "@prisma/client": "^5.15.0",
     "express": "^4.19.2"
   }
 }

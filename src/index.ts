@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 
 if (process.env.NODE_ENV !== "production") {
   console.log("loading dotenv");
-  dotenv.config();
+  dotenv.config({ path: ".env.dev" });
 }
 
 const SERVER_PORT = process.env.SERVER_PORT || 3000;
