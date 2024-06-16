@@ -1,0 +1,39 @@
+name: Test
+
+on:
+  workflow_call:
+    inputs:
+      commit:
+        description: commit hash
+        type: string
+        required: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.commit }}
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+
+      - name: install dependencies
+        run: npm install
+
+      - name: setup environment
+        run: |
+          cp .env.sample .env
+          npm run db:migrate initial
+          npm run db:deploy
+
+      - name: lint the whole thing
+        run: npm run lint
+
+      - name: run tests
+        run: npm run test

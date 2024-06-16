@@ -1,0 +1,14 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  run-tests:
+    name: Run tests
+    uses: ./.github/workflows/test.yml
+    with:
+      commit: ${{ github.sha }}
