@@ -1,9 +1,10 @@
 #! /usr/bin/env node
 // @ts-check
 
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
 import url from "url";
+import { execSync } from "child_process";
 
 const ignoreList = [
   ".git",
@@ -19,49 +20,66 @@ const __dirname = path.dirname(__filename);
 const sourceDir = path.resolve(__dirname, "..");
 const targetDirName = process.argv[2];
 
-if (!targetDirName) {
-  console.error("Please provide a target directory");
-  process.exit(1);
-}
+// top level await :tada:
+await createSaneToolsProject(sourceDir, targetDirName);
 
-const targetDir = path.resolve(process.cwd(), targetDirName);
+/**
+ * @param {string} sourceDir
+ * @param {string} targetDirName
+ */
+async function createSaneToolsProject(sourceDir, targetDirName) {
+  if (!targetDirName) {
+    console.error("Please provide a target directory");
+    process.exit(1);
+  }
 
-fs.mkdir(targetDir, (err) => {
-  if (err) throw err;
+  const targetDir = path.resolve(process.cwd(), targetDirName);
+
+  await fs.mkdir(targetDir);
   console.log(`Directory ${targetDir} created`);
 
-  fs.readdir(sourceDir, (err, files) => {
-    if (err) throw err;
+  const files = await fs.readdir(sourceDir);
 
-    files.forEach((file) => {
-      console.log(file);
-      if (ignoreList.includes(file)) return;
+  const promises = files.map(async (file) => {
+    if (ignoreList.includes(file)) return;
 
-      const sourceFile = path.join(sourceDir, file);
-      const targetFile = path.join(targetDir, file);
+    const sourceFile = path.join(sourceDir, file);
+    const targetFile = path.join(targetDir, file);
 
-      if (fs.lstatSync(sourceFile).isDirectory()) {
-        fs.cp(sourceFile, targetFile, { recursive: true }, (err) => {
-          if (err) throw err;
-          console.log(`${file} created at ${targetDir}`);
-        });
+    const isDir = (await fs.lstat(sourceFile)).isDirectory();
+    if (isDir) {
+      return copyDir(sourceFile, targetFile);
+    } else {
+      if (file === "package.json") {
+        return copyPackageJson(sourceFile, targetFile);
       } else {
-        if (file === "package.json") {
-          copyPackageJson(sourceFile, targetFile);
-        } else {
-          copyFile(sourceFile, targetFile);
-        }
+        return copyFile(sourceFile, targetFile);
       }
-    });
+    }
   });
-});
+
+  await Promise.all(promises);
+
+  initializeProject(targetDir);
+}
 
 /**
  * @param {string} sourceFile
  * @param {string} targetFile
+ * @returns {Promise<void>}
  */
-function copyPackageJson(sourceFile, targetFile) {
-  const fileContent = fs.readFileSync(sourceFile, "utf8");
+async function copyDir(sourceFile, targetFile) {
+  console.log(`copying ${targetFile}/...`);
+  await fs.cp(sourceFile, targetFile, { recursive: true });
+}
+
+/**
+ * @param {string} sourceFile
+ * @param {string} targetFile
+ * @returns {Promise<void>}
+ */
+async function copyPackageJson(sourceFile, targetFile) {
+  const fileContent = await fs.readFile(sourceFile, "utf8");
   const targetContent = fileContent.replace("sanetools", targetDirName);
   const targetJson = JSON.parse(targetContent);
 
@@ -69,15 +87,31 @@ function copyPackageJson(sourceFile, targetFile) {
   delete targetJson["author"];
   delete targetJson["license"];
 
-  fs.writeFileSync(targetFile, JSON.stringify(targetJson, null, 2));
+  console.log(`copying ${targetFile}`);
+  await fs.writeFile(targetFile, JSON.stringify(targetJson, null, 2));
 }
 
 /**
  * @param {string} sourceFile
  * @param {string} targetFile
+ * @returns {Promise<void>}
  */
-function copyFile(sourceFile, targetFile) {
-  fs.copyFile(sourceFile, targetFile, (err) => {
-    if (err) throw err;
+async function copyFile(sourceFile, targetFile) {
+  console.log(`copying ${targetFile}`);
+  await fs.copyFile(sourceFile, targetFile);
+}
+
+/**
+ * @param {string} targetDir
+ */
+function initializeProject(targetDir) {
+  console.log("installing dependencies...");
+  execSync("npm install", { cwd: targetDir, stdio: "inherit" });
+
+  console.log("initializing the project...");
+  execSync("cp .env.sample .env", { cwd: targetDir, stdio: "inherit" });
+  execSync("npm run db:migrate initial && npm run db:deploy", {
+    cwd: targetDir,
+    stdio: "inherit",
   });
 }
