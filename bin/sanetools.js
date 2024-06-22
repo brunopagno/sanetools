@@ -34,6 +34,7 @@ fs.mkdir(targetDir, (err) => {
     if (err) throw err;
 
     files.forEach((file) => {
+      console.log(file);
       if (ignoreList.includes(file)) return;
 
       const sourceFile = path.join(sourceDir, file);
