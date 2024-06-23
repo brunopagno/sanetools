@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import request from "supertest";
-import { app } from "./server.js";
+import { app } from "../src/server.js";
 
 describe("endpoints", () => {
   describe("/", () => {

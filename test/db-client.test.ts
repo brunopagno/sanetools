@@ -1,7 +1,5 @@
 import { describe, test, expect, afterAll } from "vitest";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "../src/db-client.js";
 
 describe("database example test", () => {
   afterAll(async () => {
