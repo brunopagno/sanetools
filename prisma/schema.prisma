@@ -10,8 +10,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Dummy {
-  id        Int       @id   @default(autoincrement())
-  name      String    @unique
-  something String?
+model Config {
+  id    Int     @id   @default(autoincrement())
+  name  String  @unique
+  value String
 }
