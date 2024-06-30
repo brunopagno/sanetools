@@ -4,7 +4,6 @@
 import fs from "fs/promises";
 import path from "path";
 import url from "url";
-import { execSync } from "child_process";
 
 const ignoreList = [
   ".git",
@@ -57,12 +56,29 @@ async function createSaneToolsProject(sourceDir, targetDirName) {
       }
     }
   });
-  // janky copy gitignore because it gets ignored because it includes `.git`
-  copyFile(path.join(sourceDir, '.gitignore'), path.join(targetDir, '.gitignore'));
+
+  // janky copy gitignore because it is ignored by `npx` somehow
+  promises.push(
+    fs.writeFile(
+      path.join(targetDir, ".gitignore"),
+      `.env
+node_modules/
+dist/
+
+*.sqlite
+*.sqlite-journal
+    `,
+    ),
+  );
 
   await Promise.all(promises);
 
-  initializeProject(targetDir);
+  console.log("");
+  console.log("You probably now want to cd into your project and run");
+  console.log("npm install");
+  console.log("npm run initialize");
+  console.log("");
+  console.log("Stay sane");
 }
 
 /**
@@ -101,19 +117,4 @@ async function copyPackageJson(sourceFile, targetFile) {
 async function copyFile(sourceFile, targetFile) {
   console.log(`copying ${targetFile}`);
   await fs.copyFile(sourceFile, targetFile);
-}
-
-/**
- * @param {string} targetDir
- */
-function initializeProject(targetDir) {
-  console.log("installing dependencies...");
-  execSync("npm install", { cwd: targetDir, stdio: "inherit" });
-
-  console.log("initializing the project...");
-  execSync("cp .env.sample .env", { cwd: targetDir, stdio: "inherit" });
-  execSync("npm run db:migrate initial && npm run db:deploy", {
-    cwd: targetDir,
-    stdio: "inherit",
-  });
 }

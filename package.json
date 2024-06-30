@@ -6,6 +6,7 @@
     "sanetools": "./bin/sanetools.js"
   },
   "scripts": {
+    "initialize": "cp .env.sample .env && npm run db:migrate initial && npm run db:deploy",
     "start": "NODE_ENV=production node dist/index.js",
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
