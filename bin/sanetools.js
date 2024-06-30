@@ -57,6 +57,8 @@ async function createSaneToolsProject(sourceDir, targetDirName) {
       }
     }
   });
+  // janky copy gitignore because it gets ignored because it includes `.git`
+  copyFile(path.join(sourceDir, '.gitignore'), path.join(targetDir, '.gitignore'));
 
   await Promise.all(promises);
 
