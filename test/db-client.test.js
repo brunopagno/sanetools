@@ -16,6 +16,12 @@ describe("database example test", () => {
       },
     });
 
+    await prisma.config.delete({
+      where: {
+        name: "version",
+      },
+    });
+
     expect(record.name).toBe(name);
     expect(record.value).toBe(value);
   });
