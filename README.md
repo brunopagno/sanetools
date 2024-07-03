@@ -26,6 +26,7 @@ Then start building things
 #### Commands
 
 ```
+npm run build   # build the project
 npm run dev     # starts the dev hot reloading website
 npm run start   # starts the production build
 npm run test
@@ -43,7 +44,7 @@ npm db:deploy   # to update local dev & test db to the latest migration
 
 ### This project uses
 
-- nobuild
+- typescript
 - expressjs
 - prisma
 - sqlite (should not be too difficul to change the database if you prefer something else)
