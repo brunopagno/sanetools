@@ -6,11 +6,16 @@
 
     "allowJs": true,
     "checkJs": true,
-    "noEmit": true,
     "strict": true,
+
+    "esModuleInterop": true,
+    "skipLibCheck": true,
 
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "nodenext",
-    "resolveJsonModule": true
-  }
+    "resolveJsonModule": true,
+
+    "outDir": "dist"
+  },
+  "include": ["src/**/*.ts", "src/**/*.js"]
 }
