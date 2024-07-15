@@ -36,7 +36,7 @@
     "supertest": "^7.0.0",
     "tsx": "^4.16.2",
     "typescript": "^5.4.5",
-    "typescript-eslint": "^8.0.0-alpha.10",
+    "typescript-eslint": "^8.0.0-alpha.44",
     "typescript-language-server": "^4.3.3",
     "vitest": "^1.6.0"
   },
